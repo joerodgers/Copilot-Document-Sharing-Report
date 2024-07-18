@@ -45,7 +45,7 @@ function Find-SharedDocument
             $query = "IsDocument:true ($($paths -join " OR "))"
         }
 
-        $selectProperties = "SPSiteUrl", "SPWebUrl", "Filename", "FileExtension", "Path", "Created", "LastModifiedTime", "ViewableByExternalUsers", "ContentClass", "SiteId", "InformationProtectionLabelId"
+        $selectProperties = "SPSiteUrl", "SPWebUrl", "Filename", "Path", "Created", "LastModifiedTime", "ViewableByExternalUsers", "SiteId", "InformationProtectionLabelId"
 
 
         $columns = @($selectProperties | ForEach-Object { @{ Name="$_"; Expression=[ScriptBlock]::Create("`$_['$_']") }})
@@ -59,8 +59,6 @@ function Find-SharedDocument
         $objects = New-Object System.Collections.Generic.List[object]
 
         $startTime = [DateTime]::Now
-
-        $BatchSize = 500
     }
     process
     {
