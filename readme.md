@@ -1,5 +1,5 @@
 ## Overview
-The collection of PowerShell scripts provided is designed to assist organizations implementing M365 Copilot in identifying documents in SharePoint and OneDrive shared broadly with [_Everyone_](https://learn.microsoft.com/en-us/microsoft-365/troubleshoot/access-management/grant-everyone-claim-to-external-users) or [_Everyone Except External Users (EEEU)_](https://learn.microsoft.com/en-us/microsoft-365/troubleshoot/access-management/grant-everyone-claim-to-external-users). Once the process of pinpointing these extensively shared documents is finished, a subsequent script can be executed to compile a comprehensive summary report that encompasses detailed metadata pertaining to the SharePoint or OneDrive site where they are housed. This equips administrators with the necessary insights to focus on sites containing files of elevated sensitivity.
+The collection of PowerShell scripts provided is designed to assist organizations implementing M365 Copilot in identifying documents in SharePoint and OneDrive shared broadly with [_Everyone_](https://learn.microsoft.com/en-us/microsoft-365/troubleshoot/access-management/grant-everyone-claim-to-external-users) or [_Everyone Except External Users (EEEU)_](https://learn.microsoft.com/en-us/microsoft-365/troubleshoot/access-management/grant-everyone-claim-to-external-users). Once the process of pinpointing these extensively shared documents is finished, a subsequent script can be executed to compile a comprehensive summary report that encompasses detailed metadata pertaining to the SharePoint or OneDrive site where they are housed. This equips administrators with the necessary insights to focus on sites with a specific visibility or template type, usage or popularity, or the existance of highly sensitive files.
 
 Example screenshots of a final summary report:
 
@@ -28,21 +28,21 @@ Example screenshots of a final summary report:
 * A user account, whether on a domain or in the cloud, requires minimum read permissions exclusively to the root sites of SharePoint and OneDrive. This access is essential for the user account to perform the search queries needed to locate documents shared across the tenants.
 
 #### [_New-SharedDocumentSummaryReport.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/New-SharedDocumentSummaryReport.ps1)
-* This script can be run under a user or service principal context.
+* This script can be run under a user (delegated) or service principal (application) context.
 
   - User Context (Delegated)
     - SharePoint and/or Global Administrator
     - Microsoft Graph > Delegated > Groups.Read.All
     - Microsoft Graph > Delegated > Reports.Read.All
     - Microsoft Graph > Delegated > InformationProtectionPolicy.Read.All
-    - Microsoft Graph > Delegated > Tasks.Read.All (added 07-18-24 to support IsPlannerConnected property)
+    - Microsoft Graph > Delegated > Tasks.Read.All
     
   - Service Principal Context (Application)
     - SharePoint > Application > Sites.FullControl.All
     - Microsoft Graph > Application > Groups.Read.All  
     - Microsoft Graph > Application > Reports.Read.All
     - Microsoft Graph > Application > InformationProtectionPolicy.Read.All
-    - Microsoft Graph > Application > Tasks.Read.All (added 07-18-24 to support IsPlannerConnected property)
+    - Microsoft Graph > Application > Tasks.Read.All
 
 #### [_Export-SharedDocumentRowsToCsv.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/Export-SharedDocumentRowsToCsv.ps1)
 * No M365 service permissions are required, all processing is local.
@@ -79,7 +79,7 @@ The following document properties will be exported to a .csv file:
 #### Script Output
 The following document summary and site properties will be exported to a .csv file:
 
-|Field|Description|
+|Column Name| Column Description|
 |-|-|
 |SiteUrl|Url of the SharePoint or OneDrive Site|
 |SharedDocumentCount|Total number of shared documents found for the site|
