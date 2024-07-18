@@ -78,30 +78,33 @@ The following document properties will be exported to a .csv file:
 
 #### Script Output
 The following document summary and site properties will be exported to a .csv file:
-  - SiteUrl - Url of the SharePoint or OneDrive Site
-  - SharedDocumentCount - Total number of shared documents found for the site
-  - SharedDocumentsViewableByExternalUsersCount - Total number of shared documents viewable by guests for the site
-  - SiteSensitivityLabel - Sensitivity Label applied to the site
-  - UnlabedFileCount - Total number of shared documents without a sensitivity label applied
-  - \<DYNAMIC COLUMN\> - Total number of shared documents with specific sensitivity label applied
-  - SiteVisibility - Visibility of the connected M365 Group, otherwise blank.
-  - OwnerLoginName - The primary owner or M365 Group owners
-  - IsGroupConnected - True if group connected, otherwise False
-  - LastContentModifiedDate - Date and time (UTC) when the content of the site was last changed.
-  - LastActivityDate - The date of the last time file activity was detected or a page was viewed on the site.
-  - RootWebTemplate - Template of the site collection's root web site.
-  - SiteFileCount - The number of files on the site.
-  - SiteSharingCapability - The value of the external sharing setting for the site.
-  - SiteStorageMB - The amount of storage currently being used on the site.
-  - SubSiteCount - Total number of sub webs for the site.
-  - IsTeamsConnected - True if connected to a Microsoft Team, otherwise false.
-  - IsVivaEngageConnected - True if connected to a Viva Engage Community, otherwise false. (added 07-18-24)
-  - IsPlannerConnected - True if connected to one or more Planner Plans, otherwise false. (added 07-18-24)
-  - GroupId - GUID of the M365 group, otherwise a empty GUID
-  - SiteId - GUID of the SharePoint site.
-  - ActiveFileCount - The number of active files on the site. A file is considered active if it has been saved, synced, modified, or shared within the specified time period.
-  - PageViewCount - The number of times pages were viewed on the site.
-  - VisitedPageCount - The number of unique pages that were visited on the site.
+
+|Field|Description|
+|-|-|
+|SiteUrl|Url of the SharePoint or OneDrive Site|
+|SharedDocumentCount|Total number of shared documents found for the site|
+|SharedDocumentsViewableByExternalUsersCount|Total number of shared documents viewable by guests for the site|
+|SiteSensitivityLabel|Sensitivity Label applied to the site|
+|UnlabedFileCount|Total number of shared documents without a sensitivity label applied|
+|\<DYNAMIC COLUMN\>|Total number of shared documents with specific sensitivity label applied|
+|SiteVisibility|Visibility of the connected M365 Group, otherwise blank|
+|OwnerLoginName | The primary owner or M365 Group owners |
+|IsGroupConnected | True if group connected, otherwise False| 
+|IsTeamsConnected | True if connected to a Microsoft Team, otherwise false| 
+|IsVivaEngageConnected | True if connected to a Viva Engage Community, otherwise false (added 07-18-24)| 
+|IsPlannerConnected | True if connected to one or more Planner Plans, otherwise false (added 07-18-24)| 
+|LastContentModifiedDate | Date and time (UTC) when the content of the site was last changed| 
+|LastActivityDate | The date of the last time file activity was detected or a page was viewed on the site| 
+|RootWebTemplate | Template of the site collection's root web site| 
+|SiteFileCount | The number of files on the site|
+|SiteSharingCapability | The value of the external sharing setting for the site|
+|SiteStorageMB | The amount of storage currently being used on the site|
+|SubSiteCount | Total number of sub webs for the site|
+|GroupId | GUID of the M365 group, otherwise a empty GUID|
+|SiteId | GUID of the SharePoint site|
+|ActiveFileCount | The number of active files on the site. A file is considered active if it has been saved, synced, modified, or shared within the specified time period|
+|PageViewCount | The number of times pages were viewed on the site|
+|VisitedPageCount | The number of unique pages that were visited on the site|
 
 
 #### [_Export-SharedDocumentRowsToCsv.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/Export-SharedDocumentRowsToCsv.ps1)
