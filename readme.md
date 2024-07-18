@@ -4,15 +4,15 @@ The collection of PowerShell scripts provided is designed to assist organization
 Example screenshots of a final summary report:
 
 <p align="center" width="100%">
-    <kbd><img src="https://github.com/joerodgers/copilot-oversharing-scripts/blob/main/assets/summary-report-1.png" width="800"></kbd>
+    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-1.png" width="800"></kbd>
 </p>
 
 <p align="center" width="100%">
-    <kbd><img src="https://github.com/joerodgers/copilot-oversharing-scripts/blob/main/assets/summary-report-2.png" width="800"></kbd>
+    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-2.png" width="800"></kbd>
 </p>
 
 <p align="center" width="100%">
-    <kbd><img src="https://github.com/joerodgers/copilot-oversharing-scripts/blob/main/assets/summary-report-3.png" width="800"></kbd>
+    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-3.png" width="800"></kbd>
 </p>
 
 
@@ -24,10 +24,10 @@ Example screenshots of a final summary report:
 
 ## Access Requirements
 
-#### [_Find-SharedDocument.ps1_](https://gist.github.com/joerodgers/fae7afe52af5f7c226a47f0069f6279f#file-find-shareddocument-ps1)
+#### [_Find-SharedDocument.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/Find-SharedDocument.ps1)
 * A user account, whether on a domain or in the cloud, requires minimum read permissions exclusively to the root sites of SharePoint and OneDrive. This access is essential for the user account to perform the search queries needed to locate documents shared across the tenants.
 
-#### [_New-SharedDocumentSummaryReport.ps1_](https://gist.github.com/joerodgers/fae7afe52af5f7c226a47f0069f6279f#file-new-shareddocumentsummaryreport-ps1)
+#### [_New-SharedDocumentSummaryReport.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/New-SharedDocumentSummaryReport.ps1)
 * This script can be run under a user or service principal context.
 
   - User Context (Delegated)
@@ -44,12 +44,12 @@ Example screenshots of a final summary report:
     - Microsoft Graph > Application > InformationProtectionPolicy.Read.All
     - Microsoft Graph > Application > Tasks.Read.All (added 07-18-24 to support IsPlannerConnected property)
 
-#### [_Export-SharedDocumentRowsToCsv.ps1_](https://gist.github.com/joerodgers/fae7afe52af5f7c226a47f0069f6279f#file-export-shareddocumentrowstocsv-ps1)
+#### [_Export-SharedDocumentRowsToCsv.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/Export-SharedDocumentRowsToCsv.ps1)
 * No M365 service permissions are required, all processing is local.
 
 ## Script Execution and Output
 
-#### [_Find-SharedDocument.ps1_](https://gist.github.com/joerodgers/fae7afe52af5f7c226a47f0069f6279f#file-find-shareddocument-ps1)
+#### [_Find-SharedDocument.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/Find-SharedDocument.ps1)
 
 #### Script Execution
   1. Update lines #191, #198 and #204 with your environment specific values.
@@ -70,7 +70,7 @@ The following document properties will be exported to a .csv file:
   - SiteId
   - InformationProtectionLabelId
 
-#### [_New-SharedDocumentSummaryReport.ps1_](https://gist.github.com/joerodgers/fae7afe52af5f7c226a47f0069f6279f#file-new-shareddocumentsummaryreport-ps1)
+#### [_New-SharedDocumentSummaryReport.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/New-SharedDocumentSummaryReport.ps1)
 #### Script Execution
 1. Update lines #366 #378 and #380 with your environment specific values. If using service principal authentication, update the admin URL, ClientId, Thumbprint and TenantId values.
 2. Execute _New-SharedDocumentSummaryReport.ps1_.  If you are using a user context for authentication, enter a SharePoint/Global administrator credential.
@@ -104,7 +104,7 @@ The following document summary and site properties will be exported to a .csv fi
   - VisitedPageCount - The number of unique pages that were visited on the site.
 
 
-#### [_Export-SharedDocumentRowsToCsv.ps1_](https://gist.github.com/joerodgers/fae7afe52af5f7c226a47f0069f6279f#file-export-shareddocumentrowstocsv-ps1)
+#### [_Export-SharedDocumentRowsToCsv.ps1_](https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/Export-SharedDocumentRowsToCsv.ps1)
 #### Script Execution
 1. Update lines #81 and #84 with the desired URLs and path to the existing .csv file.
 2. Execute Export-SharedDocumentRowsToCsv.ps1
