@@ -89,20 +89,20 @@ Required permissions for user (delegated) authentication:
 |API | Type | Least Privileged Permission | Justification |
 |-|-|-|-|
 |SharePoint| Delegated | Access to the SharePoint Tenant Administration site | Required to retrieve tenant site properties. |
-|Microsoft Graph | Delegated | Groups.Read.All |  Required to retrieve M365 Group properties and associated endpoints.|
-|Microsoft Graph | Delegated | Reports.Read.All | Required to retrieve details about SharePoint site usage. |
-|Microsoft Graph | Delegated | InformationProtectionPolicy.Read.All | Required to retrieve labels available for the signed-in user.|
-|Microsoft Graph | Delegated | Tasks.Read.All | Required to retrieve Planner associations with M365 Groups.|
+|Microsoft&nbsp;Graph | Delegated | Groups.Read.All |  Required to retrieve M365 Group properties and associated endpoints.|
+|Microsoft&nbsp;Graph | Delegated | Reports.Read.All | Required to retrieve details about SharePoint site usage. |
+|Microsoft&nbsp;Graph | Delegated | InformationProtectionPolicy.Read.All | Required to retrieve labels available for the signed-in user.|
+|Microsoft&nbsp;Graph | Delegated | Tasks.Read.All | Required to retrieve Planner associations with M365 Groups.|
 
 Required permissions for service principal (application) authentication:
 
 |API | Type | Least Privileged Permission | Justification |
 |-|-|-|-|
 |SharePoint| Application | Sites.FullControl.All | Required to retrieve tenant site properties. |
-|Microsoft Graph | Application | Groups.Read.All | Required to retrieve M365 Group properties and associated endpoints. |
-|Microsoft Graph | Application | Reports.Read.All | Required to retrieve details about SharePoint site usage. |
-|Microsoft Graph | Application | InformationProtectionPolicy.Read.All | Required to retrieve labels available to the organization as a service principal.|
-|Microsoft Graph | Application | Tasks.Read.All | Required to retrieve Planner associations with M365 Groups.|
+|Microsoft&nbsp;Graph | Application | Groups.Read.All | Required to retrieve M365 Group properties and associated endpoints. |
+|Microsoft&nbsp;Graph | Application | Reports.Read.All | Required to retrieve details about SharePoint site usage. |
+|Microsoft&nbsp;Graph | Application | InformationProtectionPolicy.Read.All | Required to retrieve labels available to the organization as a service principal.|
+|Microsoft&nbsp;Graph | Application | Tasks.Read.All | Required to retrieve Planner associations with M365 Groups.|
 
 
 ### Configuration
