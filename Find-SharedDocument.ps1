@@ -192,19 +192,20 @@ function Find-SharedDocument
 }
 
 # Permissoins Required: RUN AS ACCOUNT WITH NO ACCESS TO SHAREPIONT OR ONEDRIVE CONTENT
-Connect-PnPOnline `
-        -Url "https://contoso.sharepoint.com" `
-        -Interactive `
-        -ForceAuthentication
 
-# scan spo documents
-Find-SharedDocument `
-        -SearchScope SharePoint `
-        -FilePath "C:\temp\SharedDocuments-SharePoint_$timestamp.csv" `
-        -Verbose
+$timestamp = Get-Date -Format FileDateTime
 
-# scan onedrive documents
-Find-SharedDocument `
-        -SearchScope OneDrive `
-        -FilePath "C:\temp\SharedDocuments-OneDrive_$timestamp.csv" `
-        -Verbose
+# update with your tenant admin site URL
+Connect-PnPOnline -Url "https://contoso.sharepoint.com" `
+                  -Interactive `
+                  -ForceAuthentication
+
+# update path to the location to write the SharedContent-SharePoint_<timestamp>.csv file
+Find-SharedDocument -SearchScope SharePoint `
+                    -FilePath "C:\temp\SharedDocuments-SharePoint_$timestamp.csv" `
+                    -Verbose
+
+# update path to the location to write the SharedContent-OneDrive_<timestamp>.csv file
+Find-SharedDocument -SearchScope OneDrive `
+                    -FilePath "C:\temp\SharedDocuments-OneDrive_$timestamp.csv" `
+                    -Verbose
