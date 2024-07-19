@@ -58,10 +58,6 @@ Find-SharedDocument -SearchScope OneDrive `
                     -FilePath "C:\temp\SharedDocuments-OneDrive_$timestamp.csv" `
                     -Verbose
 ```
-  1. Update lines #191, #198 and #204 with your environment specific values.
-  2. From a Windows PowerShell or PowerShell prompt, execute _Find-SharedDocument.ps1_.  When prompted, enter the user credential.
-  3. Wait patiently, in tenants with a large number of shared documents this script may take several hours to complete.
-
 
 
 #### Outputs
