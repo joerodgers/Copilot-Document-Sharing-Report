@@ -2,11 +2,11 @@
 The collection of PowerShell scripts provided is designed to assist organizations implementing M365 Copilot in identifying documents in SharePoint and OneDrive shared broadly with [_Everyone_](https://learn.microsoft.com/en-us/microsoft-365/troubleshoot/access-management/grant-everyone-claim-to-external-users) or [_Everyone Except External Users (EEEU)_](https://learn.microsoft.com/en-us/microsoft-365/troubleshoot/access-management/grant-everyone-claim-to-external-users). Once the process of pinpointing these extensively shared documents is finished, a subsequent script can be executed to compile a comprehensive summary report that encompasses detailed metadata pertaining to the SharePoint or OneDrive site where they are housed. This equips administrators with the necessary insights to focus on sites with a specific visibility or template type, usage or popularity, or the existance of highly sensitive files.
 
 ## Script Reference
-|Script Name|Description|Required Permissions|Config|Outputs|
-|-|-|-|-|-|
-|Find-SharedDocument.ps1|Utilizes a specially crafted search query to locate and report all documents shared with Everyone or EEEU.|[Permission details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#required-permissions)|[Configuration details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#configuration)|[.csv file](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#outputs)|
-|New-SharedDocumentSummaryReport.ps1|Generates a comprehensive report which encompasses document analysis and detailed metadata pertaining to the SharePoint or OneDrive site where they are housed.|[Permission details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#required-permissions-1)|[Configuration details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#configuration-1)|[.csv file](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#outputs-1)|
-|Export-SharedDocumentRowsToCsv.ps1|An optional script which can be used to extract all rows for specific sites from the .csv file created by *Find-SharedDocument.ps1*. |None|[Configuration details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#configuration-2)|[.csv file](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#outputs-2)|
+||Script Name|Description|Required Permissions|Config|Outputs|
+|-|-|-|:-:|:-:|:-:|
+|:one:|Find-SharedDocument.ps1|Utilizes a specially crafted search query to locate and report all documents shared with Everyone or EEEU.|[details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#required-permissions)|[details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#configuration)|[.csv file](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#outputs)|
+|:two:|New-SharedDocumentSummaryReport.ps1|Generates a comprehensive report which encompasses document analysis and detailed metadata pertaining to the SharePoint or OneDrive site where they are housed.|[details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#required-permissions-1)|[details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#configuration-1)|[.csv file](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#outputs-1)|
+|:three:|Export-SharedDocumentRowsToCsv.ps1|An optional script which can be used to extract all rows for specific sites from the .csv file created by *Find-SharedDocument.ps1*. |None|[details](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#configuration-2)|[.csv file](https://github.com/joerodgers/Copilot-Document-Sharing-Report/tree/main?tab=readme-ov-file#outputs-2)|
 
 
 Example screenshots of a final summary report:
@@ -31,7 +31,7 @@ Example screenshots of a final summary report:
 - Windows PowerShell 5.1 or higher
 - [PnP.PowerShell](https://www.powershellgallery.com/packages/PnP.PowerShell) module version 1.12.0 or higher
 
-## Find-SharedDocument.ps1
+## :one: Find-SharedDocument.ps1
 
 Utilizes a specially crafted search query to locate and report all documents shared with Everyone or EEEU
 
@@ -78,7 +78,7 @@ Generates a .csv file with following columns:
 |InformationProtectionLabelId | GUID of the Purview Sensitivity Label applied to the document, if one is applied.|
 
 
-## New-SharedDocumentSummaryReport.ps1
+## :two: New-SharedDocumentSummaryReport.ps1
 
 Generates a comprehensive report which encompasses document analysis and detailed metadata pertaining to the SharePoint or OneDrive site where they are housed.
 
@@ -151,7 +151,7 @@ Generates a .csv file with following columns:
 |PageViewCount                               | The number of times pages were viewed on the site|
 |VisitedPageCount                            | The number of unique pages that were visited on the site|
 
-## Export-SharedDocumentRowsToCsv.ps1
+## :three: Export-SharedDocumentRowsToCsv.ps1
 An ancillary script which will copy all entries for particular sites from the extensive .csv file generated by Find-SharedDocument.ps1 to new a .csv file. Clients have utilized these condensed .csv files to supply site collection administrators with precise data to aid in focused permission correction.
 
 ### Required Permissions
