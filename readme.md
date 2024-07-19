@@ -12,17 +12,20 @@ The collection of PowerShell scripts provided is designed to assist organization
 Example screenshots of a final summary report:
 
 <p align="center" width="100%">
-    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-1.png" width="800"></kbd>
+    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-6.png"></kbd>
 </p>
 
 <p align="center" width="100%">
-    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-2.png" width="800"></kbd>
+    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-7.png"></kbd>
 </p>
 
 <p align="center" width="100%">
-    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-3.png" width="800"></kbd>
+    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-8.png"></kbd>
 </p>
 
+<p align="center" width="100%">
+    <kbd><img src="https://github.com/joerodgers/Copilot-Document-Sharing-Report/blob/main/assets/summary-report-9.png"></kbd>
+</p>
 
 ## PowerShell Requirements
 - Windows PowerShell 5.1 or higher
