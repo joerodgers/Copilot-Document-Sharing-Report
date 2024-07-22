@@ -462,17 +462,15 @@ Connect-PnPOnline `
         -Thumbprint $env:O365_THUMBPRINT `
         -Tenant     $env:O365_TENANTID
 #>
-# update path to the location of your SharedContent-SharePoint_<timestamp>.csv file
-New-SharedDocumentSummaryReport -Path "C:\_temp\SharedDocuments-SharePoint_20240718T0942280728.csv" -Verbose -BasicSummaryReport
 
-RETURN
+
 # update with your tenant admin site URL
 Connect-PnPOnline -Url "https://contoso-admin.sharepoint.com" `
                   -Interactive `
                   -ForceAuthentication
 
-
-New-SharedDocumentSummaryReport -Path "C:\temp\SharedContent-SharePoint_20240620T1536438280.csv" -Verbose -BasicSummaryReport
+# update path to the location of your SharedContent-SharePoint_<timestamp>.csv file
+New-SharedDocumentSummaryReport -Path "C:\temp\SharedDocuments-SharePoint_20240620T1536438280.csv" -Verbose
 
 # update path to the location of your SharedContent-OneDrive_<timestamp>.csv file
 New-SharedDocumentSummaryReport -Path "C:\temp\SharedContent-OneDrive__20240620T1536438280.csv" -Verbose
