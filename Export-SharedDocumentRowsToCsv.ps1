@@ -80,7 +80,10 @@ function Get-SharedDocument
 $sites = "https://contoso.sharepoint.com/sites/marketing", "https://contoso.sharepoint.com/sites/finance"
 
 # path to csv
-$filePath = "C:\_temp\SharedContent-SharePoint_20240626T1736337909.csv"
+$filePath = "C:\temp\SharedContent-SharePoint_20240626T1736337909.csv"
+
+# unique timestamp for output file to prevent accidential data duplication
+$timestamp = Get-Date -Format FileDateTime
 
 # enumerate sites
 foreach( $site in $sites )
@@ -99,12 +102,17 @@ foreach( $site in $sites )
         $sitename = [string]::Concat( $sitename.Split( [System.IO.Path]::GetInvalidFileNameChars()) )
         
         # append the site name to the input file name
-        $fileName = "{0}_{1}{2}" -f $fi.BaseName, $sitename, $fi.Extension
+        $fileName = "{0}_{1}_{2}{3}" -f $fi.BaseName, $sitename, $timestamp, $fi.Extension
 
         $path = Join-Path -Path $fi.Directory.FullName -ChildPath $filename
 
         # save as csv in the same location as input csv
         $rows | Export-Csv -Path $path -NoTypeInformation
+
+        Write-Host "Saved $($rows.Count) rows for $($site) to $path"
+    }
+    else 
+    {
+        Write-Host "$($rows.Count) rows found for $($site)."
     }
 }
-

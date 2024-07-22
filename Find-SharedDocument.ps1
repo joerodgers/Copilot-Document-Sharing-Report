@@ -5,18 +5,32 @@ function Find-SharedDocument
     [CmdletBinding(DefaultParameterSetName="SharePoint")]
     param
     (
+        # optional list of site collection URLs to scan.
         [Parameter(Mandatory=$true,ParameterSetName="SpecificSites")]
         [string[]]
         $SiteUrl,
 
+        # set's search stop to either sharepoint or onedrive
         [Parameter(Mandatory=$true,ParameterSetName="TenantSites")]
         [ValidateSet("SharePoint", "OneDrive")]
         [string]
         $SearchScope,
 
+        # full file path to export search results 
         [Parameter(Mandatory=$true)]
         [string]
-        $FilePath
+        $FilePath,
+
+        # advanced property that allows you to page results at a specifc value between 1 and 500.  Default/max is 500.
+        [Parameter(Mandatory=$false)]
+        [ValidateRange(1,500)]
+        [int]
+        $MaxResults = 500,
+
+        # advanced property that allows starting an scan using a specific DocId. Default is 0.
+        [Parameter(Mandatory=$false)]
+        [Int64]
+        $IndexDocId = 0
     )
 
     begin
@@ -47,12 +61,9 @@ function Find-SharedDocument
 
         $selectProperties = "SPSiteUrl", "SPWebUrl", "Filename", "Path", "Created", "LastModifiedTime", "ViewableByExternalUsers", "SiteId", "InformationProtectionLabelId"
 
-
         $columns = @($selectProperties | ForEach-Object { @{ Name="$_"; Expression=[ScriptBlock]::Create("`$_['$_']") }})
 
         $counter = 1
-
-        $lastDocumentId = 0
 
         $fileCount = 0
 
@@ -73,7 +84,7 @@ function Find-SharedDocument
 
         while( $true )
         {
-            $pagedQuery = "$Query AND IndexDocId > $lastDocumentId"
+            $pagedQuery = "$Query AND IndexDocId > $IndexDocId"
 
             try
             {
@@ -83,7 +94,7 @@ function Find-SharedDocument
                                 -Query            $pagedQuery `
                                 -SortList         @{ "[DocId]" = "ascending" } `
                                 -StartRow         0 `
-                                -MaxResults       500 `
+                                -MaxResults       $MaxResults `
                                 -TrimDuplicates   $true `
                                 -SelectProperties $SelectProperties `
                                 -ErrorAction      Stop
@@ -117,7 +128,7 @@ function Find-SharedDocument
             {
                 $fileCount += $results.RowCount
 
-                if( $lastDocumentId -gt 0 -and $counter % 10 -eq 0 -and $fileCount -lt $totalRows )
+                if( $IndexDocId -gt 0 -and $counter % 10 -eq 0 -and $fileCount -lt $totalRows )
                 {
                     $average = [Math]::Round( $stopwatch.Elapsed.TotalSeconds / $counter, 2 )
                     
@@ -126,7 +137,7 @@ function Find-SharedDocument
                     Write-Verbose "$(Get-Date) - Estimated Completion: $($startTime.AddSeconds($totalseconds))"
                 }
 
-                if( $lastDocumentId -eq 0 )
+                if( $IndexDocId -eq 0 )
                 {
                     $totalRows        = $results.TotalRows
                     $estimatedbatches = [Math]::Max( [Math]::Round( $totalRows/500, 0), 1)
@@ -136,7 +147,7 @@ function Find-SharedDocument
 
                 Write-Verbose "$(Get-Date) - Processing Page: $($counter), Page Result Count: $($results.RowCount)"
 
-                $lastDocumentId = $results.ResultRows[-1]["DocId"].ToString()
+                $IndexDocId = [Int64]$results.ResultRows[-1]["DocId"]
                 
                 if( $counter -eq 1 )
                 {

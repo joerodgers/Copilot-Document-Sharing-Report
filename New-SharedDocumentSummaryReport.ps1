@@ -5,40 +5,50 @@ function New-SharedDocumentSummaryReport
     [CmdletBinding()]
     param
     (
+        # path to SharedContent-SharePoint_<timestamp>.csv or SharedContent-OneDrive_<timestamp>.csv  file.
         [Parameter(Mandatory=$true)]
         [string]
-        $Path
+        $Path,
+
+        # optional switch to indicated that only a basic summary report including SiteUrl, SharedDocumentCount, SharedDocumentsViewableByExternalUsersCount will be generated.
+        [Parameter(Mandatory=$false)]
+        [switch]
+        $BasicSummaryReport
     )
 
     begin
     {
-        $connection = Get-PnpConnection -ErrorAction Stop
-
-        # default to app-only endpoint
-        $graphSensitivityLabelEndpoint = "/beta/security/informationProtection/sensitivityLabels"
-
-        if( $connection.ClientId -eq [PnP.Framework.AuthenticationManager]::CLIENTID_PNPMANAGEMENTSHELL <# 31359c7f-bd7e-475c-86db-fdb8c937548e #> )
-        {
-            # delegated connection
-            $graphSensitivityLabelEndpoint = "/beta/me/security/informationProtection/sensitivityLabels"
-        }
-        
-        # need to use raw api to fetch label formats
-        $availableSensitivityLabels = Invoke-PnPGraphMethod -Method Get -Url $graphSensitivityLabelEndpoint -Verbose:$false -ErrorAction Stop | Select-Object -ExpandProperty value
-
-        # pull out file labels
-        $availableFileSensitivityLabels = $availableSensitivityLabels | Where-Object -Property contentFormats -Contains "file" | Select-Object Id, Name
-
-        $availableSensitivityLabels | ForEach-Object { Write-Verbose "$(Get-Date) - Available Sensitivity Label: Name:$($_.Name), Id:$($_.Id), Usage:$($_.contentFormats -join ";") "}
-
         # build a dictionary to track the number of files by label 
         $documentsBySensitivityLabel = [System.Collections.Generic.Dictionary[Guid, int]]::new()
 
-        $documentsBySensitivityLabel.Add( [Guid]::Empty, 0 ) # default label that represents an unlabeled file
-        
-        foreach( $availableFileSensitivityLabel in $availableFileSensitivityLabels )
-        {
-            $documentsBySensitivityLabel.Add( $availableFileSensitivityLabel.id, 0 )
+        # don't fetch service data that is not required for a basic report
+        if( -not $BasicSummaryReport.IsPresent )
+        {   
+            $connection = Get-PnpConnection -ErrorAction Stop
+
+            # default to app-only endpoint
+            $graphSensitivityLabelEndpoint = "/beta/security/informationProtection/sensitivityLabels"
+
+            if( $connection.ClientId -eq [PnP.Framework.AuthenticationManager]::CLIENTID_PNPMANAGEMENTSHELL <# 31359c7f-bd7e-475c-86db-fdb8c937548e #> )
+            {
+                # delegated connection
+                $graphSensitivityLabelEndpoint = "/beta/me/security/informationProtection/sensitivityLabels"
+            }
+            
+            # need to use raw api to fetch label formats
+            $availableSensitivityLabels = Invoke-PnPGraphMethod -Method Get -Url $graphSensitivityLabelEndpoint -Verbose:$false -ErrorAction Stop | Select-Object -ExpandProperty value
+
+            # pull out file labels
+            $availableFileSensitivityLabels = $availableSensitivityLabels | Where-Object -Property contentFormats -Contains "file" | Select-Object Id, Name
+
+            $availableSensitivityLabels | ForEach-Object { Write-Verbose "$(Get-Date) - Available Sensitivity Label: Name:$($_.Name), Id:$($_.Id), Usage:$($_.contentFormats -join ";") "}
+
+            $documentsBySensitivityLabel.Add( [Guid]::Empty, 0 ) # default label that represents an unlabeled file
+            
+            foreach( $availableFileSensitivityLabel in $availableFileSensitivityLabels )
+            {
+                $documentsBySensitivityLabel.Add( $availableFileSensitivityLabel.id, 0 )
+            }
         }
 
         # storage for SharedDocumentSummaryModel objects
@@ -55,6 +65,9 @@ function New-SharedDocumentSummaryReport
         {
             throw "File not found: $Path"
         }
+
+        # generate summary csv file name
+        $exportPath = Join-Path -Path $fileInfo.Directory.FullName -ChildPath "$($fileInfo.BaseName)_BasicSummaryReport$($fileInfo.Extension)"
 
         $counter = 0
 
@@ -123,6 +136,27 @@ function New-SharedDocumentSummaryReport
                 $streamReader.Close()
                 $streamReader.Dispose()
             }
+        }
+
+        if( $BasicSummaryReport.IsPresent )
+        {
+            $basicSummaryResults = foreach( $key in $sharedDocumentSummaryModels.Keys )
+            {
+                $sharedDocumentSummaryModel = $sharedDocumentSummaryModels[$key]
+
+                $sharedDocumentSiteSummaryModel = [SharedDocumentSiteSummaryModel]::new()
+                $sharedDocumentSiteSummaryModel.SiteUrl                                     = $sharedDocumentSummaryModel.SiteUrl
+                $sharedDocumentSiteSummaryModel.SharedDocumentCount                         = $sharedDocumentSummaryModel.SharedDocumentCount
+                $sharedDocumentSiteSummaryModel.SharedDocumentsViewableByExternalUsersCount = $sharedDocumentSummaryModel.ViewableByExternalUsersCount
+
+                $sharedDocumentSiteSummaryModel
+            }
+    
+            $basicSummaryResults | Sort-Object -Property SharedDocumentCount -Descending | Select-Object SiteUrl, SharedDocumentCount, SharedDocumentsViewableByExternalUsersCount | Export-Csv -Path $exportPath -NoTypeInformation
+            
+            Write-Host "Basic summary report written to $exportPath"
+            
+            return
         }
 
         if( $sharedDocumentSummaryModels[0].Key -match "-my.sharepoint" )
@@ -428,14 +462,17 @@ Connect-PnPOnline `
         -Thumbprint $env:O365_THUMBPRINT `
         -Tenant     $env:O365_TENANTID
 #>
+# update path to the location of your SharedContent-SharePoint_<timestamp>.csv file
+New-SharedDocumentSummaryReport -Path "C:\_temp\SharedDocuments-SharePoint_20240718T0942280728.csv" -Verbose -BasicSummaryReport
 
+RETURN
 # update with your tenant admin site URL
 Connect-PnPOnline -Url "https://contoso-admin.sharepoint.com" `
                   -Interactive `
                   -ForceAuthentication
 
-# update path to the location of your SharedContent-SharePoint_<timestamp>.csv file
-New-SharedDocumentSummaryReport -Path "C:\temp\SharedContent-SharePoint_20240620T1536438280.csv" -Verbose
+
+New-SharedDocumentSummaryReport -Path "C:\temp\SharedContent-SharePoint_20240620T1536438280.csv" -Verbose -BasicSummaryReport
 
 # update path to the location of your SharedContent-OneDrive_<timestamp>.csv file
 New-SharedDocumentSummaryReport -Path "C:\temp\SharedContent-OneDrive__20240620T1536438280.csv" -Verbose
