@@ -323,11 +323,11 @@ function New-SharedDocumentSummaryReport
             "IsTeamsConnected",
             "IsVivaEngageConnected",
             "IsPlannerConnected", 
-            "GroupId", 
-            "SiteId", 
             "ActiveFileCount", 
             "PageViewCount", 
-            "VisitedPageCount"
+            "VisitedPageCount",
+            "GroupId", 
+            "SiteId"
         )
 
         # insert dynamic file label count headers at index 4
@@ -337,7 +337,7 @@ function New-SharedDocumentSummaryReport
         }
 
         # export summary data
-        $results | Select-Object $orderedOutputColumns | Sort-Object -Property SharedDocumentCount, SiteUrl -Descending |  Export-Csv -Path $exportPath -NoTypeInformation
+        $results | Select-Object $orderedOutputColumns | Sort-Object -Property SharedDocumentCount, SiteUrl -Descending |  Export-Csv -Path $exportPath -NoTypeInformation -Encoding utf8
         
         Write-Host "Summary report written to $exportPath"
     }

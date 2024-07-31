@@ -107,7 +107,7 @@ foreach( $site in $sites )
         $path = Join-Path -Path $fi.Directory.FullName -ChildPath $filename
 
         # save as csv in the same location as input csv
-        $rows | Export-Csv -Path $path -NoTypeInformation
+        $rows | Export-Csv -Path $path -NoTypeInformation -Encoding utf8
 
         Write-Host "Saved $($rows.Count) rows for $($site) to $path"
     }

@@ -164,7 +164,7 @@ function Find-SharedDocument
 
                 if( $objects.Count -ge 5000 )
                 {
-                    $sw = Measure-Command -Expression { $objects | Out-File -FilePath $FilePath -Append -Confirm:$false }
+                    $sw = Measure-Command -Expression { $objects | Out-File -FilePath $FilePath -Append -Confirm:$false -Encoding utf8 }
 
                     Write-Verbose "$(Get-Date) - `t`tFlushed $($objects.Count) rows in $([Math]::Round( $sw.TotalMilliseconds, 0))ms"
 
@@ -181,17 +181,10 @@ function Find-SharedDocument
     
         if( $objects.Count -gt 0 )
         {
-            Write-Verbose "$(Get-Date) - Flushing remaining $($objects.Count) rows to disk."
+            $sw = Measure-Command -Expression { $objects | Out-File -FilePath $FilePath -Append -Confirm:$false -Encoding utf8 }
 
-            if( $PSVersionTable.PSVersion.Major -le 5 )
-            {
-                $objects | Out-File -FilePath $FilePath -Append -Confirm:$false -Encoding ascii # allows for no fuss opening in Excel
-            }
-            else
-            {
-                $objects | Out-File -FilePath $FilePath -Append -Confirm:$false
-            }
-            
+            Write-Verbose "$(Get-Date) - `t`tFlushed final $($objects.Count) rows in $([Math]::Round( $sw.TotalMilliseconds, 0))ms"
+
             $objects.Clear()
         }
         
