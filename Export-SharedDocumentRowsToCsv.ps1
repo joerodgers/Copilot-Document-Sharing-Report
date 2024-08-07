@@ -38,10 +38,13 @@ function Get-SharedDocument
             # find the index of the SPSiteUrl column
             $indexOfUrlColumn = $chunks.IndexOf( '"SPSiteUrl"' )
 
+
             if( $indexOfUrlColumn -lt 0 )
             {
                 throw """SPSiteUrl"" column not found in $FilePath"
             }
+
+            Write-Verbose "[$(Get-Date)] - SPSiteUrl column index: $indexOfUrlColumn"
 
             # build a collection of file headers
             $chunks | ForEach-Object -Process { $null = $headers.Add( $_.ToString().TrimStart('"').TrimEnd('"').Trim()) }
@@ -55,6 +58,10 @@ function Get-SharedDocument
                 if( $chunks[$indexOfUrlColumn] -eq """$SiteUrl""" )
                 {
                     $line | ConvertFrom-Csv -Delimiter "," -Header $headers
+                }
+                else
+                {
+                    Write-Debug "[$(Get-Date)] - No match: '$($chunks[$indexOfUrlColumn])'"
                 }
             }
         }
@@ -90,6 +97,11 @@ foreach( $site in $sites )
 {
     $fi = [System.IO.FileInfo]::new( $filePath )
 
+    if( -not $fi.Exists )
+    {
+        throw "File not found: $($fi.FullName)"
+    }
+    
     # look for all matching sites
     $rows = Get-SharedDocument -FilePath $filePath -SiteUrl $site
 
