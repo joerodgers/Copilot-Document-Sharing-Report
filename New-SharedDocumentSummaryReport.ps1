@@ -445,7 +445,7 @@ class SharedDocumentSummaryModel
 #        - SharePoint Administrator Role
 #        - Microsoft Graph > Delegated > Directory.All
 #        - Microsoft Graph > Delegated > Reports.Read.All
-#        - Microsoft Graph > Delegated > InformationProtectionPolicy.Read.All
+#        - Microsoft Graph > Delegated > InformationProtectionPolicy.Read.All (one of the following roles: Global Reader, Organization Management, Security Reader, Compliance Data Administrator, Security Administrator, Compliance Administrator)
 #        - Microsoft Graph > Delegated > Tasks.Read.All
 #    
 #    Application Option: 
@@ -466,6 +466,7 @@ Connect-PnPOnline `
 
 # update with your tenant admin site URL
 Connect-PnPOnline -Url "https://contoso-admin.sharepoint.com" `
+                  -ClientId "<YOUR GUID>"
                   -Interactive `
                   -ForceAuthentication
 

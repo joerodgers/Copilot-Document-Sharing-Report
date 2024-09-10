@@ -48,6 +48,7 @@ $timestamp = Get-Date -Format FileDateTime
 
 # update with your tenant admin site URL
 Connect-PnPOnline -Url "https://contoso.sharepoint.com" `
+                  -ClientId "<YOUR CLIENT ID>" `
                   -Interactive `
                   -ForceAuthentication
 
@@ -88,10 +89,10 @@ Required permissions for user (delegated) authentication:
 
 |API | Type | Least Privileged Permission | Justification |
 |-|-|-|-|
-|SharePoint| Delegated | Access to the SharePoint Tenant Administration site | Required to retrieve tenant site properties. |
+|SharePoint| Delegated | Sites.FullControl.All - Any one role: SharePoint Administrator or Global Administrator | Required to retrieve tenant site properties. |
 |Microsoft&nbsp;Graph | Delegated | Groups.Read.All |  Required to retrieve M365 Group properties and associated endpoints.|
 |Microsoft&nbsp;Graph | Delegated | Reports.Read.All | Required to retrieve details about SharePoint site usage. |
-|Microsoft&nbsp;Graph | Delegated | InformationProtectionPolicy.Read.All | Required to retrieve labels available for the signed-in user.|
+|Microsoft&nbsp;Graph | Delegated | InformationProtectionPolicy.Read.All - Any one role: Global Reader, Organization Management, Security Reader, Compliance Data Administrator, Security Administrator, Compliance Administrator | Required to retrieve labels available for the signed-in user.|
 |Microsoft&nbsp;Graph | Delegated | Tasks.Read.All | Required to retrieve Planner associations with M365 Groups.|
 
 Required permissions for service principal (application) authentication:
@@ -111,6 +112,7 @@ Before executing the PowerShell script, update the three lines below with your s
 ``` PowerShell
 # update with your tenant admin site URL
 Connect-PnPOnline -Url "https://contoso-admin.sharepoint.com" `
+                  -ClientId "<YOUR CLIENT ID>" `
                   -Interactive `
                   -ForceAuthentication
 

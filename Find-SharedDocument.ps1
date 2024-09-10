@@ -195,12 +195,13 @@ function Find-SharedDocument
     }
 }
 
-# Permissoins Required: RUN AS ACCOUNT WITH NO ACCESS TO SHAREPIONT OR ONEDRIVE CONTENT
+# Permissoins Required: RUN AS ACCOUNT WITH NO ACCESS TO SHAREPOINT OR ONEDRIVE CONTENT
 
 $timestamp = Get-Date -Format FileDateTime
 
 # update with your tenant root site URL
 Connect-PnPOnline -Url "https://contoso.sharepoint.com" `
+                  -ClientId "<GUID>" `
                   -Interactive `
                   -ForceAuthentication
 
