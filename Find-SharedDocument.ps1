@@ -199,9 +199,9 @@ function Find-SharedDocument
 
 $timestamp = Get-Date -Format FileDateTime
 
-# update with your tenant root site URL
+# update with your tenant root site URL and ClientId
 Connect-PnPOnline -Url "https://contoso.sharepoint.com" `
-                  -ClientId "<GUID>" `
+                  -ClientId "<YOUR CLIENT ID>" `
                   -Interactive `
                   -ForceAuthentication
 

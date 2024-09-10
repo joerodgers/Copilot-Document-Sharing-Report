@@ -464,9 +464,9 @@ Connect-PnPOnline `
 #>
 
 
-# update with your tenant admin site URL
+# update with your tenant admin site URL and ClientId
 Connect-PnPOnline -Url "https://contoso-admin.sharepoint.com" `
-                  -ClientId "<YOUR GUID>"
+                  -ClientId "<YOUR CLIENT GUID>"
                   -Interactive `
                   -ForceAuthentication
 
