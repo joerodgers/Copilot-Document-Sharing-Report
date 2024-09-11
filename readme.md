@@ -32,7 +32,9 @@ Example screenshots of a final summary report:
 - [PnP.PowerShell](https://www.powershellgallery.com/packages/PnP.PowerShell) module version 1.12.0 or higher
 
 ## Register an Entra ID Application to use with PnP PowerShell
-https://pnp.github.io/powershell/articles/registerapplication
+>[!NOTE]  
+>As of September 9th, 2024, this has become mandatory step. This article will guide you through how to do so.
+- [Register an Entra ID Application to use with PnP PowerShell](https://pnp.github.io/powershell/articles/registerapplication)
 
 ## :one: Find-SharedDocument.ps1
 
