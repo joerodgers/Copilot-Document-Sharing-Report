@@ -31,6 +31,9 @@ Example screenshots of a final summary report:
 - Windows PowerShell 5.1 or higher
 - [PnP.PowerShell](https://www.powershellgallery.com/packages/PnP.PowerShell) module version 1.12.0 or higher
 
+## Register an Entra ID Application to use with PnP PowerShell
+https://pnp.github.io/powershell/articles/registerapplication
+
 ## :one: Find-SharedDocument.ps1
 
 Utilizes a specially crafted search query to locate and report all documents shared with Everyone or EEEU
@@ -94,7 +97,7 @@ Required permissions for user (delegated) authentication:
 |API | Type | Least Privileged Permission | Justification |
 |-|-|-|-|
 |SharePoint           | Role      | SharePoint Administrator         | Required to retrieve tenant site properties.                         |
-|SharePoint           | Delegated | Sites.FullControl.All            | Required to retrieve tenant site properties.                         |
+|SharePoint           | Delegated | AllSites.FullControl             | Required to retrieve tenant site properties.                         |
 |Microsoft&nbsp;Graph | Delegated | User.ReadBasic.All               | Required to retrieve M365 Group owner's email addresses.             |
 |Microsoft&nbsp;Graph | Delegated | Group.Read.All                   | Required to retrieve M365 Group properties and associated endpoints. |
 |Microsoft&nbsp;Graph | Delegated | Reports.Read.All                 | Required to retrieve details about SharePoint site usage.            |
