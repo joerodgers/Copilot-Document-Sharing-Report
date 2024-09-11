@@ -476,6 +476,7 @@ class SharedDocumentSummaryModel
 #        - Microsoft Graph > Application > Tasks.Read.All
 
 <# service prinpcial connection example
+
 Connect-PnPOnline `
         -Url        "https://contoso-admin.sharepoint.com" `
         -ClientId   $env:O365_CLIENTID `
