@@ -38,6 +38,10 @@ Utilizes a specially crafted search query to locate and report all documents sha
 ### Required Permissions
 A user account, a domain or cloud account, requires a minimum of read permissions exclusively to the root sites of SharePoint and OneDrive. This access is essential for the user account to perform the search queries needed to locate documents shared across the tenants.
 
+|API | Type | Least Privileged Permission | Justification |
+|-|-|-|-|
+|SharePoint | Delegated | Sites.Search.All or AllSites.Read | Required to query files hosted in SharePoint Online and OneDrive for Business. |
+
 ### Configuration
 Before executing the PowerShell script, update the three lines below with your specific values:
 
@@ -89,22 +93,23 @@ Required permissions for user (delegated) authentication:
 
 |API | Type | Least Privileged Permission | Justification |
 |-|-|-|-|
-|SharePoint| Delegated | Sites.FullControl.All - Any one role: SharePoint Administrator or Global Administrator | Required to retrieve tenant site properties. |
-|Microsoft&nbsp;Graph | Delegated | Groups.Read.All |  Required to retrieve M365 Group properties and associated endpoints.|
-|Microsoft&nbsp;Graph | Delegated | Reports.Read.All | Required to retrieve details about SharePoint site usage. |
-|Microsoft&nbsp;Graph | Delegated | InformationProtectionPolicy.Read.All - Any one role: Global Reader, Organization Management, Security Reader, Compliance Data Administrator, Security Administrator, Compliance Administrator | Required to retrieve labels available for the signed-in user.|
-|Microsoft&nbsp;Graph | Delegated | Tasks.Read.All | Required to retrieve Planner associations with M365 Groups.|
+|SharePoint           | Role      | SharePoint Administrator         | Required to retrieve tenant site properties.                         |
+|SharePoint           | Delegated | Sites.FullControl.All            | Required to retrieve tenant site properties.                         |
+|Microsoft&nbsp;Graph | Delegated | User.ReadBasic.All               | Required to retrieve M365 Group owner's email addresses.             |
+|Microsoft&nbsp;Graph | Delegated | Group.Read.All                   | Required to retrieve M365 Group properties and associated endpoints. |
+|Microsoft&nbsp;Graph | Delegated | Reports.Read.All                 | Required to retrieve details about SharePoint site usage.            |
+|Microsoft&nbsp;Graph | Delegated | InformationProtectionPolicy.Read | Required to retrieve labels available for the signed-in user.        |
 
 Required permissions for service principal (application) authentication:
 
 |API | Type | Least Privileged Permission | Justification |
 |-|-|-|-|
-|SharePoint| Application | Sites.FullControl.All | Required to retrieve tenant site properties. |
-|Microsoft&nbsp;Graph | Application | Groups.Read.All | Required to retrieve M365 Group properties and associated endpoints. |
-|Microsoft&nbsp;Graph | Application | Reports.Read.All | Required to retrieve details about SharePoint site usage. |
-|Microsoft&nbsp;Graph | Application | InformationProtectionPolicy.Read.All | Required to retrieve labels available to the organization as a service principal.|
-|Microsoft&nbsp;Graph | Application | Tasks.Read.All | Required to retrieve Planner associations with M365 Groups.|
-
+|SharePoint           | Application | Sites.FullControl.All                | Required to retrieve tenant site properties.                                      |
+|Microsoft&nbsp;Graph | Application | Groups.Read.All                      | Required to retrieve M365 Group properties and associated endpoints.              |
+|Microsoft&nbsp;Graph | Application | User.ReadBasic.All                   | Required to retrieve M365 Group owner's email addresses.                          |
+|Microsoft&nbsp;Graph | Application | Reports.Read.All                     | Required to retrieve details about SharePoint site usage.                         |
+|Microsoft&nbsp;Graph | Application | InformationProtectionPolicy.Read.All | Required to retrieve labels available to the organization as a service principal. |
+|Microsoft&nbsp;Graph | Application | Tasks.Read.All                       | Required to retrieve Planner associations with M365 Groups.                       |
 
 ### Configuration
 Before executing the PowerShell script, update the three lines below with your specific values:
@@ -134,12 +139,12 @@ Generates a .csv file with following columns:
 |SiteSensitivityLabel                        | Sensitivity Label applied to the site|
 |UnlabedFileCount                            | Total number of shared documents without a sensitivity label applied|
 |\<DYNAMIC COLUMN\>                          | Total number of shared documents with specific sensitivity label applied|
-|SiteVisibility                              | Visibility of the connected M365 Group, otherwise blank|
+|SiteVisibility                              | Visibility of the connected M365 Group, otherwise blank.|
 |OwnerLoginName                              | The primary owner or M365 Group owners |
 |IsGroupConnected                            | True if group connected, otherwise False| 
 |IsTeamsConnected                            | True if connected to a Microsoft Team, otherwise false| 
 |IsVivaEngageConnected                       | True if connected to a Viva Engage Community, otherwise false | 
-|IsPlannerConnected                          | True if connected to one or more Planner Plans, otherwise false | 
+|IsPlannerConnected                          | True if connected to one or more Planner Plans, otherwise false.  Only populated with using application authentication. | 
 |LastContentModifiedDate                     | Date and time (UTC) when the content of the site was last changed| 
 |LastActivityDate                            | The date of the last time file activity was detected or a page was viewed on the site| 
 |RootWebTemplate                             | Template of the site collection's root web site| 

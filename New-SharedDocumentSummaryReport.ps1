@@ -2,37 +2,51 @@
 
 function New-SharedDocumentSummaryReport
 {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName="Default")]
     param
     (
         # path to SharedContent-SharePoint_<timestamp>.csv or SharedContent-OneDrive_<timestamp>.csv  file.
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true,ParameterSetName="Default")]
         [string]
         $Path,
 
-        # optional switch to indicated that only a basic summary report including SiteUrl, SharedDocumentCount, SharedDocumentsViewableByExternalUsersCount will be generated.
-        [Parameter(Mandatory=$false)]
+        # optional switch to indicate that only a basic summary report including SiteUrl, SharedDocumentCount, SharedDocumentsViewableByExternalUsersCount will be generated.
+        [Parameter(Mandatory=$false,ParameterSetName="Default")]
+        [Parameter(Mandatory=$false,ParameterSetName="BasicSummaryReport")]
         [switch]
-        $BasicSummaryReport
+        $BasicSummaryReport,
+
+        # optional switch to optionally exclude all sensitivity label GUID to name lookups.
+        [Parameter(Mandatory=$false,ParameterSetName="Default")]
+        [Parameter(Mandatory=$false,ParameterSetName="ExcludeSensitivityLabelMapping")]
+        [switch]
+        $ExcludeSensitivityLabelMapping
     )
 
     begin
     {
+        $connection = Get-PnpConnection -ErrorAction Stop
+
+        $isAppOnlyAuthentication = [Microsoft.SharePoint.Client.ClientContextExtensions]::IsAppOnly( $connection.Context )
+
         # build a dictionary to track the number of files by label 
         $documentsBySensitivityLabel = [System.Collections.Generic.Dictionary[Guid, int]]::new()
+        $availableSensitivityLabels  = @()
 
         # don't fetch service data that is not required for a basic report
-        if( -not $BasicSummaryReport.IsPresent )
+        if( -not $BasicSummaryReport.IsPresent -and -not $ExcludeSensitivityLabelMapping.IsPresent )
         {   
-            $connection = Get-PnpConnection -ErrorAction Stop
-
             # default to app-only endpoint
             $graphSensitivityLabelEndpoint = "/beta/security/informationProtection/sensitivityLabels"
 
-            if( $connection.ClientId -eq [PnP.Framework.AuthenticationManager]::CLIENTID_PNPMANAGEMENTSHELL <# 31359c7f-bd7e-475c-86db-fdb8c937548e #> )
+            if( -not $isAppOnlyAuthentication )
             {
                 # delegated connection
                 $graphSensitivityLabelEndpoint = "/beta/me/security/informationProtection/sensitivityLabels"
+            }
+            else
+            {
+                Write-Verbose "$(Get-Date) - Using application authentication for label retrieval."
             }
             
             # need to use raw api to fetch label formats
@@ -159,7 +173,7 @@ function New-SharedDocumentSummaryReport
             return
         }
 
-        if( $sharedDocumentSummaryModels[0].Key -match "-my.sharepoint" )
+        if( $sharedDocumentSummaryModels.Keys.Count -gt 0 -and $sharedDocumentSummaryModels.Keys[0] -match "-my.sharepoint" )
         {
             Write-Verbose "$(Get-Date) - Downloading OneDrive usage details"
             $usageReportUrl = '/beta/reports/getOneDriveUsageAccountDetail(period=''D30'')?$format=application/json&$top=999'
@@ -227,9 +241,9 @@ function New-SharedDocumentSummaryReport
                 
                 $sensitivityLabel = $siteProperties.SensitivityLabel # default to the label guid in case the label is not found
 
-                if( $availableSensitivityLabels | Where-Object -Property Id -eq $siteProperties.SensitivityLabel )
+                if( $l = $availableSensitivityLabels | Where-Object -Property Id -eq $siteProperties.SensitivityLabel )
                 {
-                    $sensitivityLabel = $availableSensitivityLabels | Where-Object -Property Id -eq $siteProperties.SensitivityLabel | Select-Object -ExpandProperty Name
+                    $sensitivityLabel = $l.Name
                 }
 
                 $sharedDocumentSiteSummaryModel.GroupId                 = $siteProperties.GroupId
@@ -267,22 +281,28 @@ function New-SharedDocumentSummaryReport
                             Write-Verbose "$(Get-Date) - Looking up M365 group Viva Engage Communities"
                             $yammerCommunity = Get-PnPMicrosoft365GroupYammerCommunity -Identity $m365Group.Id -Verbose:$false -ErrorAction Stop
 
-                            try
+                            $isPlannerConnected = $null
+
+                            if( $isAppOnlyAuthentication ) # delegated authN requires context user to be M365 group member to read planner plans, which is not likely for all M365 groups
                             {
-                                Write-Verbose "$(Get-Date) - Looking up M365 group planner plans"
-                                $plannerPlans = Get-PnPPlannerPlan -Group $m365Group.Id.ToString() -Verbose:$false -ErrorAction Stop # requires Microsoft Graph > Tasks.Read.All
-                            }
-                            catch
-                            {
-                                Write-Warning "Failed to lookup the group $($siteProperties.GroupId) Planner Plan associations. Error: $($_)"
+                                try
+                                {
+                                    Write-Verbose "$(Get-Date) - Looking up M365 group planner plans"
+                                    $plannerPlans = Get-PnPPlannerPlan -Group $m365Group.Id.ToString() -Verbose:$false -ErrorAction Stop # requires Microsoft Graph > Tasks.Read.All
+                                
+                                    $isPlannerConnected = $null -ne  $plannerPlans
+                                }
+                                catch
+                                {
+                                    Write-Warning "Failed to lookup the group $($siteProperties.GroupId) Planner Plan associations. Error: $($_)"
+                                }
                             }
 
                             $sharedDocumentSiteSummaryModel.SiteVisibility        = $m365Group.Visibility
                             $sharedDocumentSiteSummaryModel.IsTeamsConnected      = $m365Group.HasTeam
                             $sharedDocumentSiteSummaryModel.OwnerLoginName        = ($m365Group.Owners.UserPrincipalName -join ",") -replace "i:0#\.f\|membership\|", ""
                             $sharedDocumentSiteSummaryModel.IsVivaEngageConnected = $null -ne  $yammerCommunity
-                            $sharedDocumentSiteSummaryModel.IsPlannerConnected    = $null -ne  $plannerPlans
-
+                            $sharedDocumentSiteSummaryModel.IsPlannerConnected    = $isPlannerConnected
                         }
                     }
                     catch
@@ -363,7 +383,7 @@ class SharedDocumentSiteSummaryModel
     [bool]
     $IsVivaEngageConnected
 
-    [bool]
+    [System.Nullable[bool]]
     $IsPlannerConnected
 
     [Nullable[DateTime]]
@@ -441,16 +461,16 @@ class SharedDocumentSummaryModel
 
 # Permissoins Required
 #
-#    Delegated Option:   
+#    Delegated Roles / Permissions
 #        - SharePoint Administrator Role
-#        - Microsoft Graph > Delegated > Directory.All
+#        - SharePoint > Delegated > Sites.FullControl.All 
+#        - Microsoft Graph > Delegated > Directory.Read.All
 #        - Microsoft Graph > Delegated > Reports.Read.All
-#        - Microsoft Graph > Delegated > InformationProtectionPolicy.Read.All (one of the following roles: Global Reader, Organization Management, Security Reader, Compliance Data Administrator, Security Administrator, Compliance Administrator)
-#        - Microsoft Graph > Delegated > Tasks.Read.All
+#        - Microsoft Graph > Delegated > InformationProtectionPolicy.Read
 #    
-#    Application Option: 
+#    Application Permissions 
 #        - SharePoint > Application > Sites.FullControl.All 
-#        - Microsoft Graph > Application > Directory.All
+#        - Microsoft Graph > Application > Directory.Read.All
 #        - Microsoft Graph > Application > Reports.Read.All
 #        - Microsoft Graph > Application > InformationProtectionPolicy.Read.All
 #        - Microsoft Graph > Application > Tasks.Read.All
@@ -463,10 +483,9 @@ Connect-PnPOnline `
         -Tenant     $env:O365_TENANTID
 #>
 
-
 # update with your tenant admin site URL and ClientId
 Connect-PnPOnline -Url "https://contoso-admin.sharepoint.com" `
-                  -ClientId "<YOUR CLIENT GUID>"
+                  -ClientId "<YOUR CLIENT ID>" `
                   -Interactive `
                   -ForceAuthentication
 

@@ -195,7 +195,11 @@ function Find-SharedDocument
     }
 }
 
-# Permissoins Required: RUN AS ACCOUNT WITH NO ACCESS TO SHAREPOINT OR ONEDRIVE CONTENT
+# Permissoins Required
+#    - NO EXPLICIT ACCESS TO ANY SHAREPOINT OR ONEDRIVE SITES OR FILES
+#    - Serivce Princiapl Delegated API Permissions (one of the following)   
+#        - SharePoint Online > Delegated > Sites.Search.All
+#        - SharePoint Online > Delegated > AllSites.Read
 
 $timestamp = Get-Date -Format FileDateTime
 
